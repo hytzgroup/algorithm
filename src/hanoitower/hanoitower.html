@@ -1,0 +1,21 @@
+<script>
+    function Hanoitower(n, str1, str2, str3) {
+        // A -> C
+        if(n == 1){
+            console.log(`第一个盘子从${str1} --->>> ${str3}`);
+        }else{
+            // 把盘子分成两部分，上面的一部分从 A -> B
+            // 下面的一个盘子从 A -> C
+            // 第一个盘子   A -> C
+            // 第二个盘子   A -> B
+            // 第一个盘子   C -> B
+            // 第三个盘子   A -> C
+            Hanoitower(n-1,str1,str3,str2); // 第一个盘子 A C B
+            console.log(`第${n}个盘子从${str1} --->>> ${str3}`); // 第二个盘子 A B C
+            Hanoitower(n-1,str2,str1,str3);// 第一个盘子 B -> C
+        }
+    }
+    //////////////////////////////////////////////////////////////
+
+    Hanoitower(2, 'A', 'B', 'C');
+</script>

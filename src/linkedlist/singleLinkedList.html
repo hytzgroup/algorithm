@@ -1,0 +1,107 @@
+<script>
+    function Node(id, name, nickName) {
+        this.id = id;
+        this.name = name;
+        this.nickName = nickName;
+        this.nextNode = null;
+    }
+
+    function SingleLinkedList() {
+        this.head = new Node(0, 'root', 'root');
+    }
+    SingleLinkedList.prototype = {
+        constructor: SingleLinkedList,
+        append: function (node) {
+            // 相对于当前的节点来说，prevNode节点是他的前一个节点
+            let prev = this.head;
+            while (prev.nextNode) {
+                prev = prev.nextNode;
+            }
+            prev.nextNode = node;
+        },
+        insertByOrder: function (node) {
+            let prevNode = this.head;
+            // 每次都拿下一个点值进行比较，所及prev指针总是指向
+            // 插入位置的前一个位置
+            while (prevNode.nextNode) {
+                // 跳过head节点，到第一个节点1
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id > node.id) {
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            const nextNode = prevNode.nextNode;// 当前节点
+            prevNode.nextNode = node;
+            node.nextNode = nextNode;
+        },
+        update: function (node) {
+            let prevNode = this.head;
+            let finder = false;
+            while (prevNode.nextNode) {
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id == node.id) {
+                    finder = true;
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            if(!finder){
+                return;
+            }
+            const nextNode = prevNode.nextNode;// 当前节点
+            if(nextNode){
+                nextNode = nextNode.nextNode;
+            }
+            prevNode.nextNode = node;
+            node.nextNode = nextNode;
+        },
+        remove: function (id) {
+            let prevNode = this.head;
+            while (prevNode.nextNode) {
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id == id) {
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            let nextNode = prevNode.nextNode;// 当前的节点
+            if(nextNode){
+                nextNode = nextNode.nextNode; // 下一个节点
+            }
+            prevNode.nextNode = nextNode;
+        },
+        each: function () {
+            let current = this.head.nextNode;
+            if (current == null) {
+                console.log('empty linked list');
+                return;
+            }
+            while (current.nextNode) {
+                console.log(current.id, current.name, current.nickName);
+                current = current.nextNode;
+            }
+            console.log(current.id, current.name, current.nickName);
+        }
+    };
+    //////////////////////////////////////////
+    const hero1 = new Node(1, "宋江", "及时雨");
+    const hero2 = new Node(2, "卢俊义", "玉麒麟");
+    const hero3 = new Node(3, "吴用", "智多星");
+    const hero4 = new Node(4, "林冲", "豹子头");
+    const singleLinkedList = new SingleLinkedList();
+    // singleLinkedList.each();
+    // singleLinkedList.append(hero1);
+    // singleLinkedList.append(hero2);
+    // singleLinkedList.append(hero3);
+    // singleLinkedList.append(hero4);
+    singleLinkedList.insertByOrder(hero1);
+    singleLinkedList.insertByOrder(hero4);
+    singleLinkedList.insertByOrder(hero2);
+    singleLinkedList.insertByOrder(hero3);
+    // singleLinkedList.each();
+    // singleLinkedList.remove(88);
+    // singleLinkedList.each();
+    singleLinkedList.update(new Node(6, "吴用222", "智多星22"));
+    singleLinkedList.each();
+</script>

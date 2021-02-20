@@ -1,0 +1,44 @@
+<script>
+    /** 
+     * 
+     */
+    let data = [53, 3, 542, 748, 14, 214];
+    let max = data[0];
+    for(let i = 1; i < data.length; i++){
+        if(data[i] > max){
+            max = data[i];
+        }
+    }
+    const buckets = [];// 10个
+    const counts = []; // 10
+    let n = 1;
+    let dig = 0;
+    for(let i = 0, len = (max+'').length; i < len; i++){
+        for(let j = 0, jlen = data.length; j < jlen; j++){
+            dig = parseInt(data[j]/n)%10;
+            if(!buckets[dig]){
+                buckets[dig] = [];
+                counts[dig] = 0;
+            }
+            buckets[dig][counts[dig]] = data[j];
+            counts[dig]++;
+        }
+        let temp = 0;
+        let tempA = 0;
+        for(let k = 0, klen = counts.length; k < klen; k++){
+            if(counts[k]){
+                while(temp < counts[k]){
+                    data[tempA] = buckets[k][temp];
+                    tempA++;
+                    temp++;
+                }
+                temp = 0;
+            }
+            // 清理指针
+            counts[k] = 0;
+        }
+        n = n*10;
+    }
+    console.log(data);
+
+</script>

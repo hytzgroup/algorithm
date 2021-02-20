@@ -1,0 +1,192 @@
+<script>
+    /** 
+     * 
+     */
+    function Node(id, name) {
+        this.id = id;
+        this.name = name;
+        this.leftNode = null;
+        this.rightNode = null;
+    }
+    Node.prototype = {
+        constructor: Node,
+        setLeft: function (node) {
+            this.leftNode = node;
+        },
+        setRight: function (node) {
+            this.rightNode = node;
+        },
+        preOrder: function () {
+            // 前序遍历: 先输出父节点，再遍历左子树和右子树
+            console.log(this.name, this.id);
+            if (this.leftNode != null) {
+                this.leftNode.preOrder();
+            }
+            if (this.rightNode != null) {
+                this.rightNode.preOrder();
+            }
+        },
+        infixOrder: function () {
+            // 中序遍历: 先遍历左子树，再输出父节点，再遍历右子树
+            if (this.leftNode != null) {
+                this.leftNode.infixOrder();
+            }
+            console.log(this.name, this.id);
+            if (this.rightNode != null) {
+                this.rightNode.infixOrder();
+            }
+        },
+        postOrder: function () {
+            // 后序遍历: 先遍历左子树，再遍历右子树，最后输出父节点
+            if (this.leftNode != null) {
+                this.leftNode.postOrder();
+            }
+            if (this.rightNode != null) {
+                this.rightNode.postOrder();
+            }
+            console.log(this.name, this.id);
+        },
+        findByPre: function (no) {
+            // 1.先判断当前节点的no是否等于要查找的节点
+            // 2.如果相等，则返回当前节点
+            // 3.查找左子节点
+            // 4.查找右子节点
+            if (this.id == no) {
+                return this;
+            }
+            let result = null;
+            if (this.leftNode != null) {
+                result = this.leftNode.findByPre(no);
+            }
+            if (result != null) {
+                return result;
+            }
+            if (this.rightNode != null) {
+                result = this.rightNode.findByPre(no);
+            }
+            return result;
+        },
+        findByInfix: function (no) {
+            let result = null;
+            if (this.leftNode != null) {
+                result = this.leftNode.findByPre(no);
+            }
+            if (result != null) {
+                return result;
+            }
+            if (this.id == no) {
+                return this;
+            }
+            if (this.rightNode != null) {
+                result = this.rightNode.findByPre(no);
+            }
+            return result;
+        },
+        findByPost: function (no) {
+            let result = null;
+            if (this.leftNode != null) {
+                result = this.leftNode.findByPre(no);
+            }
+            if (result != null) {
+                return result;
+            }
+            if (this.rightNode != null) {
+                result = this.rightNode.findByPre(no);
+            }
+            if (result != null) {
+                return result;
+            }
+            if (this.id == no) {
+                return this;
+            }
+            return result;
+        },
+        deltNode: function (no) {
+            // 删除节点
+            if(this.leftNode != null && this.leftNode.id == no){
+                this.leftNode = null;
+                return;
+            }
+            if(this.rightNode != null && this.rightNode.id == no){
+                this.rightNode = null;
+                return;
+            }
+            if(this.leftNode != null){
+                this.leftNode.deltNode(no);
+            }
+            if(this.rightNode != null){
+                this.rightNode.deltNode(no);
+            }
+        }
+    }
+    function BinaryTree(root) {
+        this.root = root;
+    }
+    BinaryTree.prototype = {
+        constructor: BinaryTree,
+        preOrder: function () {
+            if (this.root == null) {
+                console.log('root is null');
+                return;
+            }
+            this.root.preOrder();
+        },
+        infixOrder: function () {
+            if (this.root == null) {
+                console.log('root is null');
+                return;
+            }
+            this.root.infixOrder();
+        },
+        postOrder: function () {
+            if (this.root == null) {
+                console.log('root is null');
+                return;
+            }
+            this.root.postOrder();
+        },
+        findByPre: function (no) {
+            if (this.root == null) {
+                console.log('root is null');
+                return null;
+            }
+            return this.root.findByPre(no);
+        },
+        deltNode: function(no){
+            if (this.root == null) {
+                console.log('root is null');
+                return;
+            }
+            if(this.root.id == no){
+                this.root = null;
+                return;
+            }
+            this.root.deltNode(no);
+            return;
+        }
+    };
+    let n1 = new Node(1, '宋江');
+    let n2 = new Node(2, '吴用');
+    let n3 = new Node(3, '卢俊义');
+    let n4 = new Node(4, '林冲');
+    let n5 = new Node(5, '关胜');
+    n1.setLeft(n2);
+    n1.setRight(n3);
+    n3.setLeft(n4);
+    n3.setRight(n5);
+    /** 
+        1宋江
+    2吴用    3卢俊义
+        4林冲     5关胜
+    */
+    let binTree = new BinaryTree(n1);
+    binTree.preOrder(); // 1，2，3，4，5
+    console.log('--------------------');
+    binTree.infixOrder(); // 2，1，4，3，5
+    console.log('--------------------');
+    binTree.postOrder(); // 2，4，5，3，1
+    const res = binTree.findByPre(4);
+    console.log(res.id, res.name);
+    binTree.deltNode(5);
+    binTree.preOrder(); // 1，2，3，4，5
+</script>

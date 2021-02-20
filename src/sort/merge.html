@@ -1,0 +1,56 @@
+<script>
+    /**
+     * 分解 -- 合并
+     */
+    let data = [5,3,8,2];
+    const temp = [];
+    function mergeSort(arr, left, right, temp){
+        if(left < right){
+            let mid = parseInt((left+right)/2);
+            // 左递归
+            mergeSort(arr, left, mid, temp);    // [5,3]
+            // 右递归
+            mergeSort(arr, mid+1, right, temp); // [8,2]
+            // [3,5,2,8]
+            debugger;
+            merge(arr, left, mid, right, temp);
+        }
+    }
+    function merge(arr, left, mid, right, temp){
+        let l = left;
+        let m = mid+1;
+        let r = right;
+        let t = 0;
+        while(l <= mid && m <= r){
+            // 
+            if(arr[l] <= arr[m]){
+                temp[t] = arr[l];
+                t++;
+                l++;
+            }else{
+                temp[t] = arr[m];
+                t++;
+                m++;
+            }
+        }
+        while(l <= mid){
+            temp[t] = arr[l];
+            l++; 
+            t++;
+        }
+        while(m <= right){
+            temp[t] = arr[m];
+            m++;
+            t++;
+        }
+        console.log(temp);
+        let tempLeft = left;
+        t = 0;
+        while(tempLeft <= right){
+            arr[tempLeft] = temp[t];
+            tempLeft++;
+            t++;
+        }
+    }
+    mergeSort(data, 0, data.length-1, temp);
+</script>

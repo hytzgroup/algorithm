@@ -1,0 +1,41 @@
+<script>
+    function binarySearch(arr,value){
+        let left = 0;
+        let right = arr.length-1;
+        
+        return findValue(arr,left,right,value);
+        function findValue(arr,left,right,value){
+            if(left > right){
+                return -1;
+            }
+            let mid = parseInt((left+right)/2);    
+            if(value < arr[mid]){
+                return findValue(arr,left,mid-1,value);
+            }else if(value > arr[mid]){
+                return findValue(arr,mid+1,right,value);
+            }else{
+                return mid;
+            }
+            return -1;
+        }
+    }
+
+    function binarySearch2(arr,value){
+        let left = 0;
+        let right = arr.length - 1;
+        while(left <= right){
+            let mid = parseInt((left+right)/2)
+            if(value < arr[mid]){
+                right = mid-1;
+            }else if(value > arr[mid]){
+                left = mid+1;
+            }else{
+                return mid;
+            }
+        }
+        return -1;
+    }
+    /////////////////////////////////////////////////////////
+    const arr = [1, 8, 10, 89,1000,1000, 1234];
+    console.log(binarySearch2(arr,1000));
+</script>

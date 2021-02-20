@@ -1,0 +1,113 @@
+<script>
+    function Graph(vertex, matrix) {
+        this.vertexs = vertex;
+        this.edges = matrix;
+        this.tables = null;
+    }
+    Graph.prototype = {
+        constructor: Graph,
+        showGraph: function () {
+            for (let i = 0; i < this.edges.length; i++) {
+                console.log(JSON.stringify(this.edges[i]));
+            }
+        },
+        _update: function (index) {
+            // 跟新当前下标的邻接节点：距离数组，前驱数组
+            const rowData = this.edges[index];
+            const len = rowData.length;
+            //     //A,B,C,D,E,F,G
+            // /*G*/[2,3,N,N,4,6,N]
+            for (let i = 0; i < len; i++) {// A B C D E F G
+                // 出发顶点到index距离+index到目标顶点i的距离
+                // 小于 出发顶点到目标顶点i的距离，则更新距离表和前驱表
+                const dis = this.tables.getDis(index) + rowData[i];
+                // index为出发顶点G G->G的距离为0 + 
+                // rowData[0] = A G-A的距离为2
+                // dis = 2
+                // this.tables.getDis(i) A 65535
+                // rowData[1] = B G -> B的距离 3
+                // dis = 3
+                // this.tables.getDis[1] B 65535
+                // rowData[2] = C G -> C 65535
+                // this.tables.getDis(2) 65535
+                // 联通且距离小
+                if (!this.tables.isVisited(i) && dis < this.tables.getDis(i)) {
+                    this.tables.updatePre(i, index);
+                    this.tables.updateDis(i, dis);
+                }
+            }
+        },
+        dijkstra: function (startNum) {
+            this.tables = new VisitedVertex(this.vertexs.length, startNum);
+            this._update(startNum);
+            for(let i = 1; i < this.vertexs.length; i++){
+                const index = this.tables.getNext();
+                this._update(index);
+            }
+        },
+        showDijkstra: function () {
+
+        }
+    };
+    function VisitedVertex(length, index) {
+        this.already_arr = [];
+        this.pre_visited = [];
+        this.dis = [];
+        // already_arr 访问表, pre_visited 前驱表
+        for (let i = 0; i < length; i++) {
+            this.already_arr.push(0);
+            this.pre_visited.push(0);
+            this.dis.push(65535);
+        }
+        this.dis[index] = 0;
+        this.already_arr[index] = 1;
+        debugger;
+    }
+    VisitedVertex.prototype = {
+        constructor: VisitedVertex,
+        isVisited: function (index) {
+            return this.already_arr[index] == 1;
+        },
+        updateDis: function (index, value) {
+            this.dis[index] = value;
+        },
+        updatePre: function (index, preIndex) {
+            this.pre_visited[index] = preIndex;
+        },
+        getDis: function (index) {
+            return this.dis[index];
+        },
+        getNext: function () {
+            const data = this.already_arr;
+            const len = data.length;
+            let minValue = 65535;
+            let index = -1;
+            for (let i = 0; i < len; i++) {
+                // 和G可以联通的且权值最小的一个点作为下一个顶点
+                if (data[i] == 0 && this.dis[i] < minValue) {
+                    minValue = this.dis[i];
+                    index = i;
+                }
+            }
+            this.already_arr[index] = 1;
+            return index;
+        }
+    };
+    /////////////////////////////////////////////////////////////////////////
+    const N = 65535;
+    const vertexs = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const matrix = [
+       //A,B,C,D,E,F,G
+   /*A*/[N, 5, 7, N, N, N, 2],
+   /*B*/[5, N, N, 9, N, N, 3],
+   /*C*/[7, N, N, N, 8, N, N],
+   /*D*/[N, 9, N, N, N, 4, N],
+   /*E*/[N, N, 8, N, N, 5, 4],
+   /*F*/[N, N, N, 4, 5, N, 6],
+   /*G*/[2, 3, N, N, 4, 6, N]
+    ]
+    const graph = new Graph(vertexs, matrix);
+    graph.showGraph();
+    graph.dijkstra(6);
+    //graph.showDijkstra();
+</script>

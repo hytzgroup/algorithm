@@ -1,0 +1,70 @@
+<script>
+    let str = '';
+    function Node(value) {
+        this.value = value;
+        this.leftNode = null;
+        this.rightNode = null;
+    }
+    Node.prototype = {
+        preOrder: function () {
+            // str += this.value+', ';
+            // console.log(str);
+            console.log(this.value);
+            if (this.leftNode != null) {
+                this.leftNode.preOrder();
+            }
+            if (this.rightNode != null) {
+                this.rightNode.preOrder();
+            }
+        }
+    };
+    function HuffmanTree(arr) {
+        this.arr = arr;
+        this.root = null;
+    }
+    HuffmanTree.prototype = {
+        constructor: HuffmanTree,
+        preOrder: function () {
+            if (this.root == null) {
+                console.log('empty tree');
+                return;
+            }
+            this.root.preOrder();
+        },
+        sort: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < data.length - 1 - i; j++) {
+                    if (data[j].value > data[j + 1].value) {
+                        temp = data[j];
+                        data[j] = data[j + 1];
+                        data[j + 1] = temp;
+                    }
+                }
+            }
+        },
+        makeTree: function () {
+            const nodes = [];
+            for (let i = 0, len = this.arr.length; i < len; i++) {
+                nodes.push(new Node(arr[i]));
+            }
+            while(nodes.length > 1){
+                this.sort(nodes);
+                //console.log('排序后的数组是：'+JSON.stringify(nodes));
+                const leftNode = nodes.shift();// node[0]
+                const rightNode = nodes.shift(); // node[1]
+                const newNode = new Node(leftNode.value+rightNode.value);
+                newNode.leftNode = leftNode;
+                newNode.rightNode = rightNode;
+                // 删除第一个，第二个处理过的点
+                nodes.push(newNode);
+            }
+            this.root = nodes[0];
+            return this.root;
+        }
+    };
+    /////////////////////////////////////
+    const arr = [13, 7, 8, 3, 29, 6, 1];
+    const huffmanTree = new HuffmanTree(arr);
+    huffmanTree.makeTree();
+    huffmanTree.preOrder(); // 67, 29, 38, 15, 7, 8, 23, 10, 4, 1, 3, 6, 13;
+</script>

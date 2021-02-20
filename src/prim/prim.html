@@ -1,0 +1,95 @@
+<script>
+    function Graph(n) {
+        this.vertexs = [];
+        this.edges = [];
+        this.edgeNums = 0;
+        // 初始化
+        for (let i = 0; i < n; i++) {
+            const temp = [];
+            this.edges.push(temp);
+            for (let j = 0; j < n; j++) {
+                temp.push(-1);
+            }
+        }
+    }
+    Graph.prototype = {
+        constructor: Graph,
+        insertVertex: function (vertex) {
+            this.vertexs.push(vertex);
+        },
+        insertEdge: function (v1, v2, value) {
+            this.edges[v1][v2] = value;
+            this.edges[v2][v1] = value;
+            this.edgeNums++;
+        },
+        showGraph: function () {
+            for (let i = 0; i < this.edges.length; i++) {
+                console.log(JSON.stringify(this.edges[i]));
+            }
+        }
+    };
+
+    function MinTree(graph) {
+        this.graph = graph;
+    }
+    MinTree.prototype = {
+        constructor:MinTree,
+        showGraph:function(){
+            this.graph.showGraph();
+        },
+        makeGraph:function(vertexs,weight){
+
+        },
+        prim:function(startNum){
+            const vertexs = this.graph.vertexs
+            const len = vertexs.length;
+            const visited = [];
+            for(let i = 0; i < len; i++){
+                visited.push(0);
+            }
+            visited[startNum] = 1;
+            let minWeight = 10000;
+            let h1 = -1;
+            let h2 = -1;
+            //遍历当前选中的节点的所有邻接节点
+            // 找到没有访问的过的节点的权值最小的一个节点加入
+            for(let k = 0; k < len; k++){
+                // 找到已经遍历过的节点 visited[i] == 1表示访问过该节点
+                for(let i = 0; i < len; i++){ 
+                    // 找到当前遍历过的节点的邻接节点，并且该节点没有被访问过
+                    for(let j = 0; j < len; j++){ 
+                        // 找到一个访问过的节点，并找到期邻接的没有访问过的节点
+                        if(visited[i] == 1&&visited[j] == 0){
+                            // 找到权值最小的那个节点设置成已经访问过
+                            if(graph[i][j] < minWeight){
+                                minWeight = graph[i][j];
+                                h1 = i;
+                                h2 = j;
+                            }
+                        }
+                    }
+                }
+                console.log(`找到一条最小的边<${graph[h1]},${graph[h2]}>,权值是:${minWeight}`);
+                visited[h2] = 1;
+                minWeight = 1000;
+            }
+        }
+    };
+    ////////////////////////////////////////////////////////////
+    const vertexs = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const weight = [
+        //  A      B         C        D         E             F              G
+        [10000,    5,        7,       10000,    10000,        10000,         2],// A
+        [5,        10000,    10000,   9,        10000,        10000,         3],// B
+        [7,        10000,    10000,   10000,    8,            10000,     10000],// C
+        [10000,    9,        10000,   10000,    10000,        4,         10000],// D
+        [10000,    10000,    8,       10000,    10000,        5,             4],// E
+        [10000,    10000,    10000,   4,        5,            10000,         6],// F
+        [2,        3,        10000,   10000,    4,            6,         10000] // G
+    ]
+    const graph = new Graph(vertexs.length);
+    const minTree = new MinTree(graph);
+    minTree.makeGraph(vertexs,weight);
+    minTree.showGraph();
+    minTree.prim(graph, 0);
+</script>

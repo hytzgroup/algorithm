@@ -1,0 +1,22 @@
+<script>
+    /**
+     * 找到n-1元素中最小的数与a[0]交换
+     * [ 101, 34, 119, 1 ]
+     * 1.[ 1, 34, 119, 101 ] 找出除了a[0] = 101剩余元素中的最小值min = 1,min < a[0]交换
+     * 2.[ 1, 34, 119, 101] 找出a[1] = 34剩余元素中的最小值min = 101, min > a[1] 不交换
+     * 3.[ 1, 34, 101, 119 ] 找出a[2] = 119剩余元素中的最小值min = 101, min < a[2] 交换
+     * n-1次循环结束
+     */
+    let data = [101, 34, 119, 1, -1, 90, 123];
+    let temp;
+    for(let i = 0; i < data.length-1; i++){
+        for(let j = i+1; j < data.length; j++){
+            if(data[i] > data[j]){
+                temp = data[i];
+                data[i] = data[j];
+                data[j] = temp;
+            }
+        }
+    }
+    console.log(data);
+</script>

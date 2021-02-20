@@ -1,0 +1,109 @@
+<script>
+    /** 
+            1
+        3           6
+    8       10   14
+    中序遍历  8 3 10 1 14 6
+    n个结点的二叉链表中含有 n+1【公式 2n-(n-1)=n+1】 个空指针域(左指针或者右指针)。
+    利用二叉链表中的空指针(左指针或者右指针)，存放指向该结点在某种遍历次序下的前驱和后继结点的指针（这种附加的指针称为"线索"）
+    
+    这种加上了线索的二叉链表称为线索链表，相应的二叉树称为线索二叉树(Threaded BinaryTree)。
+    根据线索性质的不同，线索二叉树可分为前序线索二叉树、中序线索二叉树和后序线索二叉树三种
+    */
+    function Node(id, name) {
+        this.id = id;
+        this.name = name;
+        this.leftNode = null;
+        this.rightNode = null;
+        this.leftType = 0;
+        this.rightType = 0;
+    }
+    Node.prototype = {
+        constructor: Node,
+        setLeft: function (node) {
+            this.leftNode = node;
+        },
+        setRight: function (node) {
+            this.rightNode = node;
+        },
+        setLeftType: function (type) {
+            this.leftType = type;
+        },
+        setRightType: function (type) {
+            this.rightType = type;
+        },
+        infixOrder: function () {
+            // 中序遍历: 先遍历左子树，再输出父节点，再遍历右子树
+            if (this.leftNode != null) {
+                this.leftNode.infixOrder();
+            }
+            console.log(this.name, this.id);
+            if (this.rightNode != null) {
+                this.rightNode.infixOrder();
+            }
+        }
+    }
+
+    function ThreadedBinaryTree(root) {
+        this.root = root;
+        this.preNode = null;
+    }
+    ThreadedBinaryTree.prototype = {
+        constructor: ThreadedBinaryTree,
+        threadedNodes: function (node) {
+            // 中序线索化
+            if (node == null) {
+                return;
+            }
+            // 左子树
+            this.threadedNodes(node.leftNode);
+            // 自身
+            if(node.leftNode == null){
+                node.setLeft(this.preNode);
+                node.setLeftType(1);
+            }
+            if(this.preNode&&this.preNode.rightNode == null){
+                this.preNode.setRight(node);
+                this.preNode.setRightType(1);
+            }
+            this.preNode = node;
+            // 右子树
+            this.threadedNodes(node.rightNode);
+        },
+        threadedList: function () {
+            // 中序遍历
+            let node = this.root;
+            while(node != null){
+                while(node.leftType == 0){
+                    node = node.leftNode;
+                }
+                // 前驱节点
+                console.log(node.id,node.name);
+                while(node.rightType == 1){
+                    // 后继接节点
+                    node = node.rightNode;
+                    console.log(node.id,node.name);
+                }
+                node = node.rightNode;
+            }
+        }
+    };
+
+    //////////////////////////////////////////////////////////
+    const root = new Node(1, "tom");
+    const node2 = new Node(3, "jack");
+    const node3 = new Node(6, "smith");
+    const node4 = new Node(8, "mary");
+    const node5 = new Node(10, "king");
+    const node6 = new Node(14, "dim");
+    root.setLeft(node2);
+    root.setRight(node3);
+    node2.setLeft(node4);
+    node2.setRight(node5);
+    node3.setLeft(node6);
+    const threadedBinaryTree = new ThreadedBinaryTree(root);
+    threadedBinaryTree.threadedNodes(root);
+    console.log(node5.leftNode);
+    console.log(node5.rightNode);
+    threadedBinaryTree.threadedList(); // 8, 3, 10, 1, 14, 6
+</script>

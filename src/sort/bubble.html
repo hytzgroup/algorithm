@@ -1,0 +1,17 @@
+<script>
+    /**
+    * 交换两个相邻元素的位置
+    */
+    const data = [9, 3, 20, -1, 10];
+    let temp;
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < data.length - 1 - i; j++) {
+            if (data[j] > data[j + 1]) {
+                temp = data[j];
+                data[j] = data[j + 1];
+                data[j + 1] = temp;
+            }
+        }
+    }
+    console.log(data);
+</script>

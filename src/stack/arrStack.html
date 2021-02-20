@@ -1,0 +1,64 @@
+<script>
+    function ArrStack(maxSize){
+        this.stack = [];
+        this.top = -1;
+        this.maxSize = maxSize;
+        for(let i = 0; i < maxSize; i++){
+            this.stack.push(-1);
+        }
+    }
+    ArrStack.prototype = {
+        constructor:ArrStack,
+        isFull:function(){
+            return this.pop == this.maxSize-1;
+        },
+        isEmpty:function(){
+            return this.pop == -1;
+        },
+        push:function(value){
+            if(this.isFull()){
+                console.log('stack is full');
+                return;
+            }
+            this.top++;// 当前位置
+            this.stack[this.top] = value;
+            //this.top++;当添加满后会，调用pop、each数组越界
+        },
+        pop:function(){
+            if(this.isEmpty()){
+                console.log('stack is empty');
+                return;
+            }
+            // top初始值设为0，当添加满数据后，
+            // 调用pop方法会数组越界
+            const value = this.stack[this.top];
+            this.top--;
+            return value;
+        },
+        each:function(){
+            if(this.isEmpty()){
+                console.log('empty stack');
+                return;
+            }
+            // top初始值设为0，当添加满数据后，
+            // 调用each方法会数组越界
+            for(let i = this.top; i >= 0; i--){
+                console.log(this.stack[i]);
+            }
+        }
+    };
+    ///////////////////////////////////////////////////
+    const stack = new ArrStack(5);
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    stack.push(4);
+    stack.push(5);
+    stack.each();
+    stack.pop();
+    stack.pop();
+    stack.pop();
+    stack.pop();
+    stack.pop();
+    stack.pop();
+</script>

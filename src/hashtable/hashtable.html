@@ -1,0 +1,142 @@
+<script>
+    function Emp(id, name) {
+        this.id = id;
+        this.name = name;
+    }
+    function EmpLinkedList() {
+        this.head = new Emp(0, 'root', 'root');
+    }
+    EmpLinkedList.prototype = {
+        constructor: EmpLinkedList,
+        append: function (node) {
+            // 相对于当前的节点来说，prevNode节点是他的前一个节点
+            let prev = this.head;
+            while (prev.nextNode) {
+                prev = prev.nextNode;
+            }
+            prev.nextNode = node;
+        },
+        insertByOrder: function (node) {
+            let prevNode = this.head;
+            // 每次都拿下一个点值进行比较，所及prev指针总是指向
+            // 插入位置的前一个位置
+            while (prevNode.nextNode) {
+                // 跳过head节点，到第一个节点1
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id > node.id) {
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            const nextNode = prevNode.nextNode;// 当前节点
+            prevNode.nextNode = node;
+            node.nextNode = nextNode;
+        },
+        update: function (node) {
+            let prevNode = this.head;
+            let finder = false;
+            while (prevNode.nextNode) {
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id == node.id) {
+                    finder = true;
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            if (!finder) {
+                return;
+            }
+            const nextNode = prevNode.nextNode;// 当前节点
+            if (nextNode) {
+                nextNode = nextNode.nextNode;
+            }
+            prevNode.nextNode = node;
+            node.nextNode = nextNode;
+        },
+        remove: function (id) {
+            let prevNode = this.head;
+            while (prevNode.nextNode) {
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id == id) {
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            let nextNode = prevNode.nextNode;// 当前的节点
+            if (nextNode) {
+                nextNode = nextNode.nextNode; // 下一个节点
+            }
+            prevNode.nextNode = nextNode;
+        },
+        each: function () {
+            let current = this.head.nextNode;
+            if (current == null) {
+                console.log('empty linked list');
+                return;
+            }
+            while (current.nextNode) {
+                console.log(current.id, current.name, current.nickName);
+                current = current.nextNode;
+            }
+            console.log(current.id, current.name, current.nickName);
+        },
+        findById:function(id){
+            let prevNode = this.head;
+            while (prevNode.nextNode) {
+                const currentNode = prevNode.nextNode;
+                if (currentNode.id == id) {
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            let nextNode = prevNode.nextNode;// 当前的节点
+            return nextNode;
+        }
+    };
+
+    function HashTable(size) {
+        this.size = size;
+        this.arr = [];
+        for (let i = 0; i < size; i++) {
+            this.arr[i] = new EmpLinkedList();
+        }
+    }
+    HashTable.prototype = {
+        constructor: HashTable,
+        findById: function (id) {
+            const hash = this.getHash(id);
+            const linkedList = this.arr[hash];
+            return linkedList.findById(id);
+        },
+        add: function (emp) {
+            const id = emp.id;
+            const hash = this.getHash(id);
+            const linkedList = this.arr[hash];
+            linkedList.append(emp);
+        },
+        getHash: function (id) {
+            return id % this.size;
+        },
+        show: function () {
+            
+        }
+    };
+    //////////////////////////////////
+
+    const hashTable = new HashTable(7);
+    const n1 = new Emp(1, '大林1');
+    const n2 = new Emp(2, '大林2');
+    const n3 = new Emp(3, '大林3');
+    const n4 = new Emp(4, '大林4');
+    const n5 = new Emp(5, '大林5');
+    const n6 = new Emp(6, '大林6');
+    const n7 = new Emp(7, '大林7');
+    hashTable.add(n1);
+    hashTable.add(n2);
+    hashTable.add(n3);
+    hashTable.add(n4);
+    hashTable.add(n5);
+    hashTable.add(n6);
+    hashTable.add(n7);
+    console.log(hashTable.findById(3));
+</script>

@@ -1,0 +1,36 @@
+<script>
+    /** 
+    公共序列
+    －”A”的前缀和后缀都为空集，共有元素的长度为 [0]；
+    －”AB”的前缀为[A]，后缀为[B]，共有元素的长度为 [0,0]；
+    －”ABC”的前缀为[A, AB]，后缀为[BC, C]，共有元素的长度 [0,0,0]；
+    －”ABCD”的前缀为[A, AB, ABC]，后缀为[BCD, CD, D]，共有元素的长度为 [0,0,0,0]；
+    －”ABCDA”的前缀为[A, AB, ABC, ABCD]，后缀为[BCDA, CDA, DA, A]，共有元素为”A”，长度为 [0,0,0,0,1]；
+    －”ABCDAB”的前缀为[A, AB, ABC, ABCD, ABCDA]，后缀为[BCDAB, CDAB, DAB, AB, B]，共有元素为”AB”，长度为 2；
+    －”ABCDABD”的前缀为[A, AB, ABC, ABCD, ABCDA, ABCDAB]，后缀为[BCDABD, CDABD, DABD, ABD, BD,D]，共有元素的长度为 0
+    */
+    function kmpNext(str) {
+        const temp = [];// 初始化数组到str.length的长度
+        // 单个字符没有公共序列
+        temp[0] = 0;
+        for (let i = 1, j = 0; i < str.length; i++) {
+            // 匹配到一个相等然后再判断后面的字符是否相等
+            // 找到j++
+            // 没有找到 j = 0;
+            // ABCDA
+            while(j > 0&&str.charAt(i) != str.charAt(j)){
+                // 如果不匹配，则应该把之前的匹配吐回去
+                j = temp[j-1];
+            }
+            // 两个字符相等开始计数，不相等需要找到他们相等的地方
+            if(str.charAt(i) == str.charAt(j)){
+                j++;
+            }
+            temp[i] = j;
+        }
+        return temp;
+    }
+    /////////////////////////////////////////////////////////////////////////////
+    //console.log(kmpNext('GTGTGCF'));
+    console.log(kmpNext('aabcaaabaac'));
+</script>

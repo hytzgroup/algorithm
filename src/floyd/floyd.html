@@ -1,0 +1,58 @@
+<script>
+    function Graph(length, vertex, matrix) {
+        this.vertexs = vertex;
+        this.dis = matrix; // 距离表
+        this.pre = []; // 前驱表
+        for (let i = 0; i < length; i++) {
+            const temp = this.vertexs[i];
+            this.pre[i] = [];
+            for(let j = 0; j < length; j++){
+                this.pre[i][j] = temp;
+            }
+        }
+    }
+    Graph.prototype = {
+        constructor: Graph,
+        showGraph: function () {
+            for (let i = 0; i < this.edges.length; i++) {
+                console.log(JSON.stringify(this.edges[i]));
+            }
+        },
+        floyd: function () {
+            // A B C D E F G 起点
+            // A B C D E F G 中间点
+            // A B C D E F G 终点
+            const len = this.vertexs.length;
+            for(let k = 0; k < len; k++){// 中间顶点 A B C D E F G
+                for(let i = 0; i < len; i++){// 起点 A B C D E F G
+                    for(let j = 0; j < len; j++){ // 终点 A B C D E F G
+                        const dis = this.dis[i][k]+this.dis[k][j];
+                        if(dis < this.dis[i][j]){
+                            this.dis[i][j] = dis;
+                            this.pre[i][j] = this.pre[k][j];
+                        }
+                    }
+                }
+            }
+        },
+        show: function () {
+
+        }
+    };
+    //////////////////////////////////////////////////////////
+    const N = 65535;
+    const vertexs = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const matrix = [
+       //A,B,C,D,E,F,G
+   /*A*/[0, 5, 7, N, N, N, 2],
+   /*B*/[5, 0, N, 9, N, N, 3],
+   /*C*/[7, N, 0, N, 8, N, N],
+   /*D*/[N, 9, N, 0, N, 4, N],
+   /*E*/[N, N, 8, N, 0, 5, 4],
+   /*F*/[N, N, N, 4, 5, 0, 6],
+   /*G*/[2, 3, N, N, 4, 6, 0]
+    ]
+    const graph = new Graph(vertexs.length, vertexs, matrix);
+    graph.floyd();
+    graph.show();
+</script>

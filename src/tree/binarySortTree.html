@@ -1,0 +1,178 @@
+<script>
+    function Node(value) {
+        this.value = value;
+        this.leftNode = null;
+        this.rightNode = null;
+    }
+    Node.prototype = {
+        constructor: Node,
+        infixOrder: function () {
+            // 从小到大排列
+            if (this.leftNode != null) {
+                this.leftNode.infixOrder();
+            }
+            console.log(this.value);
+            if (this.rightNode != null) {
+                this.rightNode.infixOrder();
+            }
+        },
+        add: function (node) {
+            if (node == null) {
+                return;
+            }
+            // 左子树
+            if (node.value <= this.value) {
+                if (this.leftNode == null) {
+                    this.leftNode = node;
+                } else {
+                    this.leftNode.add(node);
+                }
+            }
+            // 右边子树
+            if (node.value > this.value) {
+                if (this.rightNode == null) {
+                    this.rightNode = node;
+                } else {
+                    this.rightNode.add(node);
+                }
+            }
+        },
+        findNode: function (value) {
+            if (this.value == value) {
+                return this;
+            }
+            let finder = null;
+            if (value < this.value) {
+                if (this.leftNode == null) {
+                    return null;
+                }
+                return this.leftNode.findNode(value);
+            }
+            if (value >= this.value) {
+                if (this.rightNode == null) {
+                    return null;
+                }
+                return this.rightNode.findNode(value);
+            }
+
+        },
+        findParent: function (value) {
+            if (this.leftNode != null && this.leftNode.value == value) {
+                return this;
+            }
+            if (this.rightNode != null && this.rightNode.value == value) {
+                return this;
+            }
+            if (value < this.value && this.leftNode != null) {
+                return this.leftNode.findParent(value);
+            }
+            if (value >= this.value && this.rightNode != null) {
+                return this.rightNode.findParent(value);
+            }
+            return null;
+        }
+    };
+    function BinarySortTree() {
+        this.root = null;
+    }
+    BinarySortTree.prototype = {
+        constructor: BinarySortTree,
+        makeTree: function (arr) {
+            for (let i = 0, len = arr.length; i < len; i++) {
+                this.add(new Node(arr[i]));
+            }
+        },
+        add: function (node) {
+            if (this.root == null) {
+                this.root = node;
+            } else {
+                this.root.add(node);
+            }
+        },
+        delRightTreeMin: function(node){
+            let prevNode = node;
+            while(prevNode.leftNode){
+                prevNode = prevNode.leftNode;
+            }
+            this.remove(prevNode.value);
+            return prevNode.value;
+        },
+        remove: function (value) {
+            if(this.root == null){
+                console.log('empty tree');
+                return;
+            }
+            const node = this.root.findNode(value);
+            if(node == null){
+                return;
+            }
+            // node 不为空，说明找到一个节点，这个节点只能是root节点
+            if(this.root.leftNode == null && this.root.rightNode == null){
+                this.root = null;// 置空整个树
+                return;
+            }
+            const parent = this.root.findParent(value);
+            // 叶子节点
+            if(node.leftNode == null && node.rightNode == null){
+
+                if(parent.leftNode != null && parent.leftNode.value == value){
+                    parent.leftNode = null;
+                }
+                if(parent.rightNode != null && parent.rightNode.value == value){
+                    parent.rightNode = null;
+                }
+                return;
+            }
+            // 有两个子树
+            if(node.leftNode != null && node.rightNode != null){
+                const minValue = this.delRightTreeMin(node.rightNode);
+                node.value = minValue;
+                return;
+            }
+            // 有一个子树，着眼到当前的节点
+            if(node.leftNode != null){
+                if(parent == null){
+                    console.log('no parent--->>>');
+                    this.root = node.leftNode;
+                    return;
+                }
+                if(parent.leftNode != null && parent.leftNode.value == value){
+                    parent.leftNode = node.leftNode;
+                }
+                if(parent.rightNode != null && parent.rightNode.value == value){
+                    parent.rightNode = node.leftNode;
+                }
+            }
+            if(node.rightNode != null){
+                if(parent == null){
+                    console.log('no parent<<<---');
+                    this.root = node.rightNode;
+                    return;
+                }
+                if(parent.leftNode != null && parent.leftNode.value == value){
+                    parent.leftNode = node.rightNode;
+                }
+                if(parent.rightNode != null && parent.rightNode.value == value){
+                    parent.rightNode = node.rightNode;
+                }
+            }
+
+        },
+        infixOrder: function () {
+            if (this.root == null) {
+                console.log('empty tree');
+                return;
+            }
+            this.root.infixOrder();
+        }
+    };
+    ////////////////////////////////////////
+    const arr = [7, 3, 10, 12, 5, 1, 9, 2];
+    const binarySortTree = new BinarySortTree();
+    binarySortTree.makeTree(arr);
+    // binarySortTree.remove(12);// 1,2,3,5,7,9,10
+    // binarySortTree.remove(1);// 2,3,5,7,9,10
+    // binarySortTree.remove(10);
+    binarySortTree.remove(9);
+    binarySortTree.infixOrder();
+</script>

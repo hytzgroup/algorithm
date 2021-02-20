@@ -1,0 +1,80 @@
+<script>
+    function Boy(id) {
+        this.id = id;
+        this.nextNode = null;
+    }
+    function CircleSingleLinkedList() {
+        this.firstBoy = null;
+    }
+    CircleSingleLinkedList.prototype = {
+        constructor: CircleSingleLinkedList,
+        addBoy: function (nums) {
+            let currentBoy = null;
+            for (let i = 1; i < nums + 1; i++) {
+                const newBoy = new Boy(i);
+                if (i == 1) {
+                    this.firstBoy = newBoy;
+                    currentBoy = newBoy;
+                }
+                currentBoy.nextNode = newBoy;
+                newBoy.nextNode = this.firstBoy;
+                currentBoy = newBoy;
+            }
+        },
+        showBoy: function () {
+            if (!this.firstBoy) {
+                console.log('empty circle');
+                return;
+            }
+            let currentBoy = this.firstBoy;
+            while (currentBoy.nextNode) {
+                console.log(currentBoy.id);
+                if (currentBoy.nextNode == this.firstBoy) {
+                    break;
+                }
+                currentBoy = currentBoy.nextNode;
+            }
+        },
+        countBoy: function (startNo, num, total) {
+            if(!this.firstBoy){
+                console.log('empty circle');
+                return;
+            }
+            // currentBoy放到firstboy的后一个位置
+            let prevBoy = this.firstBoy;
+            while(prevBoy.nextNode){
+                if(prevBoy.nextNode == this.firstBoy){
+                    break;
+                }
+                prevBoy = prevBoy.nextNode;
+            }
+            console.log(prevBoy.id);
+            // firstBoy、prevBoy设置正确的初始值
+            // startNum 表示firstBoy、prevBoy移动多少次
+            let firstBoy = this.firstBoy;
+            for(let i = 0; i < startNo-1; i++){
+                firstBoy = firstBoy.nextNode;
+                prevBoy = prevBoy.nextNode;
+            }
+            // 处理每隔num个元素出列一个小孩
+            while(true){
+                if(firstBoy == prevBoy){
+                    break;// 只剩下一个小孩
+                }
+                for(let i = 0; i < num-1; i++){
+                    firstBoy = firstBoy.nextNode;
+                    prevBoy = prevBoy.nextNode;
+                }
+                console.log('出圈的小孩id:'+firstBoy.id);
+                firstBoy = firstBoy.nextNode;// first指针向前移动
+                prevBoy.nextNode = firstBoy;// 把当前报数的小孩移除
+            }
+            console.log('最后出圈的小孩id:'+firstBoy.id);
+        }
+    };
+    //////////////////////////////////////////////////////////////
+    const circleSingleLinkedList = new CircleSingleLinkedList();
+    circleSingleLinkedList.addBoy(5);
+    circleSingleLinkedList.showBoy();
+    circleSingleLinkedList.countBoy(1,2,5);// 2->4->1->5->3
+</script>

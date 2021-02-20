@@ -1,0 +1,60 @@
+<input id="inpt" />
+<hr />
+<button>add</button>
+<button>get</button>
+<button>check</button>
+<script>
+    function ArrQueue(maxSize) {
+        this.maxSize = maxSize;
+        this.queue = [];
+        this.front = -1;
+        this.rear = -1;
+        for (let i = 0; i < maxSize; i++) {
+            this.queue.push(0);
+        }
+    }
+    ArrQueue.prototype = {
+        constructor: ArrQueue,
+        isFull: function () {
+            return this.rear == this.maxSize-1;
+        },
+        isEmpty: function () {
+            return this.front == this.rear;
+        },
+        addQueue: function (num) {
+            if(this.isFull()){
+                throw new Error('full queue');
+            }
+            this.rear++;
+            this.queue[this.rear] = num; 
+        },
+        getQueue: function () {
+            if(this.isEmpty()){
+                throw new Error('empty queue');
+            }
+            this.front++;
+            return this.queue[this.front];
+        },
+        showQueue: function () {
+            console.log(JSON.stringify(this.queue));
+        },
+        peekQueue: function () {
+            if(this.isEmpty()){
+                throw new Error('empty queue');
+            }
+            return this.queue[this.front+1];
+        }
+    };
+    const input = document.getElementById('inpt');
+    const btns = document.getElementsByTagName('button');
+    const queue = new ArrQueue(5);
+    btns[0].onclick = function(){
+        const v = input.value;
+        queue.addQueue(parseInt(v));
+        input.value = '';
+    }
+    btns[1].onclick = function(){
+        queue.getQueue();
+        queue.showQueue();
+    }
+</script>

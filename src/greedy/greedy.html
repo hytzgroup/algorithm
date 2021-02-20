@@ -1,0 +1,51 @@
+<script>
+    /** 
+     * 贪心算法解决集合覆盖问题 
+     */
+    function greedy() {
+        const all = ['北京', '上海', '天津', '广州', '深圳', '成都', '杭州', '大连'];
+        const broadcasts = {
+            k1: ['北京', '上海', '天津'],
+            k2: ['广州', '北京', '深圳'],
+            k3: ['成都', '上海', '杭州'],
+            k4: ['上海', '天津'],
+            k5: ['杭州', '大连']
+        }
+        let maxkey = null;
+        const result = [];
+        while (all.length > 0) {
+            for (let k in broadcasts) {
+                let temp = broadcasts[k];
+                temp = inArray(temp, all);
+                if (temp.length > 0 && (maxkey == null || temp.length > broadcasts[maxkey].length)) {
+                    maxkey = k;// 贪心，每次都获取覆盖最多的电台
+                }
+            }
+            if(maxkey != null){
+                result.push(maxkey);
+                remove(broadcasts[maxkey],all);
+                maxkey = null;
+            }
+        }
+        return result;
+        function remove(target,source){
+            for(let i = 0; i < target.length; i++){
+                const index = source.indexOf(target[i]);
+                if(index > -1){
+                    source.splice(index,1);
+                }
+            }
+        }
+        function inArray(target, source) {
+            const temp = [];
+            for (let i = 0; i < target.length; i++) {
+                source.includes(target[i]) && temp.push(target[i]);
+            }
+            return temp;
+        }
+
+    }
+
+    //////////////////////////////////////////////////
+    console.log(greedy()); // k1 k2 k3 k5
+</script>

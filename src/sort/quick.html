@@ -1,0 +1,54 @@
+<script>
+    let data = [5, 3, 2, 6, 2];
+    data = [2,3,4,6,4];
+    data = [1,2,3,5,3];
+    test(data, 0, data.length - 1);
+    console.log(data);
+    function test(arr, left, right) {
+        let l = left;
+        let r = right;
+        let mid = data[parseInt((left+right) / 2)];
+        let temp;
+        // left 0 right 4 mid = 2
+        while (l < r) {
+            // [5,3] 2 [6,2]
+            // 在左边的数组中找到一个 >= mid的数据
+            // 5 0
+            while (data[l] < mid) {
+                l++;
+            }
+            // 在右边的数组中找到一个 <= mid的数据
+            // 2 4
+            while (data[r] > mid) {
+                r--;
+            }
+
+            if (l >= r) {
+                break;
+            }
+            // [5,3] 2 [6,2]
+            temp = data[l];
+            data[l] = data[r];
+            data[r] = temp;
+            // [2,3] 2 [6,5]
+            // 防止两个数据相同时[2,2]出现死循环
+            if (data[l] == mid) {
+                r--;
+            }
+            // 防止两个数据相同时[2,2]出现死循环
+            if (data[r] == mid) {
+                l++;
+            }
+            if (l == r) {
+                l++;
+                r--;
+            }
+            if (left < r) {
+                test(arr, left, r);
+            }
+            if (right > l) {
+                test(arr, l, right);
+            }
+        }
+    }
+</script>

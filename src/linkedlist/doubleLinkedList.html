@@ -1,0 +1,101 @@
+<script>
+    function Node(id, name, nickName) {
+        this.id = id;
+        this.name = name;
+        this.nickName = nickName;
+        this.nextNode = null;
+        this.prevNode = null;
+    }
+    function DoubleLinkedList() {
+        this.head = new Node(0, 'root', 'root');
+    }
+    DoubleLinkedList.prototype = {
+        constructor: DoubleLinkedList,
+        append: function (node) {
+            let prevNode = this.head;
+            while(prevNode.nextNode){
+                prevNode = prevNode.nextNode;
+            }
+            prevNode.nextNode = node;
+            node.prevNode = prevNode;
+        },
+        insertByOrder: function (node) {
+            let prevNode = this.head;
+            while(prevNode.nextNode){
+                const currentNode = prevNode.nextNode;
+                if(currentNode.id > node.id){
+                    break;
+                }
+                prevNode = currentNode;
+            }
+            const nextNode = prevNode.nextNode;
+            prevNode.nextNode = node;
+            node.nextNode = nextNode;
+            if(nextNode){
+                nextNode.prevNode = node;
+            }
+            node.prevNode = prevNode;
+        },
+        update: function (node) {
+            let currentNode = this.head.nextNode;
+            while(currentNode){
+                if(currentNode.id == node.id){
+                    const prevNode = currentNode.prevNode;
+                    const nextNode = currentNode.nextNode;
+                    prevNode.nextNode = node;
+                    node.nextNode = nextNode;
+                    if(nextNode){
+                        nextNode.prevNode = node;
+                    }
+                    node.prevNode = prevNode;
+                    break;
+                }
+                currentNode = currentNode.nextNode;
+            }
+        },
+        remove: function (id) {
+            let currentNode = this.head.nextNode;
+            while(currentNode){
+                if(currentNode.id == id){
+                    const prevNode = currentNode.prevNode; // head
+                    const nextNode = currentNode.nextNode; // null
+                    prevNode.nextNode = nextNode;
+                    if(nextNode){
+                        nextNode.prevNode = prevNode;
+                    }
+                    break;
+                }
+                currentNode = currentNode.nextNode;
+            }
+        },
+        each: function () {
+            let current = this.head.nextNode;
+            if (current == null) {
+                console.log('empty linked list');
+                return;
+            }
+            while (current) {
+                console.log(current.id, current.name, current.nickName);
+                current = current.nextNode;
+            }
+        }
+    };
+    /////////////////////////////////////////////////////////////
+    const hero1 = new Node(1, "宋江", "及时雨");
+    const hero2 = new Node(2, "卢俊义", "玉麒麟");
+    const hero3 = new Node(3, "吴用", "智多星");
+    const hero4 = new Node(4, "林冲", "豹子头");
+    const doubleLinkedList = new DoubleLinkedList();
+    // doubleLinkedList.append(hero1);
+    // doubleLinkedList.append(hero2);
+    // doubleLinkedList.append(hero3);
+    // doubleLinkedList.append(hero4);
+    doubleLinkedList.insertByOrder(hero2);
+    doubleLinkedList.insertByOrder(hero1);
+    doubleLinkedList.insertByOrder(hero4);
+    doubleLinkedList.insertByOrder(hero3);
+    doubleLinkedList.each();
+    // doubleLinkedList.remove(4);
+    // doubleLinkedList.update(new Node(4, "林冲222", "豹子头222"));
+    // doubleLinkedList.each();
+</script>

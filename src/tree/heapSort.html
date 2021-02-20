@@ -1,0 +1,44 @@
+<script>
+    function heapSort(arr) {
+        makeHeap(arr, parseInt(arr.length / 2) - 1, arr.length);
+        console.log(arr);// 4, 9, 8, 5, 6
+        makeHeap(arr, 0, arr.length);
+        console.log(arr);// 9, 6, 8, 5, 4
+        return;
+        // 构造一个大顶堆
+        for(let i = parseInt(arr.length/2)-1; i >=0; i--){
+            makeHeap(arr,i,arr.length);
+            console.log(arr);
+        }
+        // 交换，剩余数组继续构造大顶堆
+        for(j = arr.length-1; j >= 0; j--){
+            const temp = arr[j];
+            arr[j] = arr[0];
+            arr[0] = temp;
+            makeHeap(arr,0,j);
+        }
+        console.log(arr);// 4 5 6 8 9
+        return;
+        makeHeap(arr, parseInt(arr.length / 2) - 1, arr.length);
+        console.log(arr);// 4, 9, 8, 5, 6
+        makeHeap(arr, 0, arr.length);
+        console.log(arr);// 9, 6, 8, 5, 4
+        function makeHeap(arr, index, length) {
+            let temp = arr[index];// 保存第一个子树的顶点值
+            for(let i = 2*index+1; i < length; i = 2*i+1){
+                if(i+1< length&& arr[i] < arr[i+1]){// 找到左右节点中的最大值
+                    i++;
+                }
+                if(arr[i] > temp){
+                    arr[index] = arr[i];// 把最大值和顶点交换
+                    index = i;
+                }else{
+                    break;
+                }
+            }
+            arr[index] = temp;// 把原先的顶点值交换到左右节点的最大那个值上
+        }
+    }
+    const arr = [4, 6, 8, 5, 9];
+    heapSort(arr);
+</script>

@@ -1,0 +1,53 @@
+<script>
+    function fib(maxSize){
+        const arr = [];
+        arr[0] = 1;
+        arr[1] = 1;
+        for(let i = 2; i < maxSize; i++){
+            arr[i] = arr[i-1]+ arr[i-2];
+        }
+        return arr;
+    }
+    function fibSearch(arr,value){
+        let left = 0;
+        let right = arr.length-1;
+        let mid = 0;
+        let k = 0;
+        const fibs = fib(20);
+        // 1(0) 1(1) 2(2) 3(3) 5(4) 8(5) 13(6) 21(7) 34(8)
+        // 数组最后的一个元素位置指针 < 小于fibs的当前项的值
+        // right要小于fibs[k]-1 为了计算mid
+        while(right > fibs[k]-1){
+            k++;//5
+        }
+        let len = arr.length;
+        let temp = [].concat(arr);
+        for(let i = len; i < fibs[k]; i++){
+            temp[i] = arr[len-1];
+        }
+        console.log(temp);
+        while(left <= right){
+            mid = left + fibs[k-1]-1;// mid = low+ fibs[k-1]-1
+            if(value < temp[mid]){// 左查找 增大相似度
+                // f[k] = f[k-1]+f[k-2]
+                // 左查找f[k-1]个元素
+                right = mid - 1;
+                k--;
+            }else if(value > temp[mid]){ // 右查找 减小相似度
+                // f[k]-1 = (f[k-1]-1)+1+(f[k-2]-1)
+                // f[k]-1 = mid+1+f[k-2]-1
+                left = mid + 1;
+                k = k-2;
+            }else{
+                if(mid <= right){
+                    return mid;
+                }
+                return right;
+            }
+        }
+        return -1;
+    }
+    /////////////////////////////////////
+    let arr = [1,8, 10, 89, 100, 200,369,900];
+    console.log(fibSearch(arr,369)); //2
+</script>

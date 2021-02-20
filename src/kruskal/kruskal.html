@@ -1,0 +1,159 @@
+<script>
+    function Graph(n) {
+        // 顶点
+        // 边 邻接表 || 邻接矩阵
+        this.vertexs = [];
+        this.edges = [];
+        this.edgeNums = 0;
+        // 初始化
+        for (let i = 0; i < n; i++) {
+            const temp = [];
+            this.edges.push(temp);
+            for (let j = 0; j < n; j++) {
+                temp.push(-1);
+            }
+        }
+    }
+    Graph.prototype = {
+        constructor: Graph,
+        insertVertex: function (vertex) {
+            this.vertexs.push(vertex);
+        },
+        insertEdge: function (v1, v2, value) {
+            this.edges[v1][v2] = value;
+            this.edges[v2][v1] = value;
+            this.edgeNums++;
+        },
+        showGraph: function () {
+            for (let i = 0; i < this.edges.length; i++) {
+                console.log(JSON.stringify(this.edges[i]));
+            }
+        }
+    };
+
+    function EdgeNode(start, end, value) {
+        this.start = start;
+        this.end = end;
+        this.value = value;
+    }
+
+    function KruskalCase(graph) {
+        this.graph = graph;
+    }
+    KruskalCase.prototype = {
+        constructor: KruskalCase,
+        makeGraph: function (vertexs, matrix) {
+            const graph = this.graph;
+            const len = vertexs.length;
+            // 更新节点
+            for (let i = 0; i < len; i++) {
+                graph.insertVertex(vertexs[i]);
+            }
+            // 更新邻接矩阵
+            for (let i = 0; i < len; i++) {
+                for (let j = 0; j < len; j++) {
+                    graph.insertEdge(i, j, matrix[i][j]);
+                }
+            }
+            // 跟新边的个数
+            graph.edgeNums = 0;
+            for (let i = 0; i < len; i++) {
+                for (let j = i + 1; j < len; j++) {
+                    if (matrix[i][j] != INF) {
+                        graph.edgeNums++;
+                    }
+                }
+            }
+        },
+        showGraph: function () {
+            this.graph.showGraph();
+        },
+        getEdges: function () {
+            const edgeNodes = [];
+            const vertexs = this.graph.vertexs;
+            const edges = this.graph.edges;
+            const len = vertexs.length;
+            let index = 0;
+            for (let i = 0; i < len; i++) {
+                for (let j = i + 1; j < len; j++) {
+                    if (edges[i][j] != INF) {
+                        edgeNodes[index++] = new EdgeNode(vertexs[i], vertexs[j], edges[i][j]);
+                    }
+                }
+            }
+            return edgeNodes;
+        },
+        getPosition: function (char) {
+            const vertexs = this.graph.vertexs;
+            const len = vertexs.length;
+            for (let i = 0; i < len; i++) {
+                if (vertexs[i] == char) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+        sortEdges: function (edgeNodes) {
+            let temp;
+            for (let i = 0; i < edgeNodes.length; i++) {
+                for (let j = 0; j < edgeNodes.length - 1 - i; j++) {
+                    if (edgeNodes[j].value > edgeNodes[j + 1].value) {
+                        temp = edgeNodes[j];
+                        edgeNodes[j] = edgeNodes[j + 1];
+                        edgeNodes[j + 1] = temp;
+                    }
+                }
+            }
+        },
+        getEndpoint: function (endpints, i) {
+            while (endpints[i] != 0) {
+                i = endpints[i];
+            }
+            return i;
+        },
+        kruskal: function () {
+            const edgeNums = this.graph.edgeNums;
+            const endpints = [];
+            for(let i = 0; i < edgeNums; i++){
+                endpints[i] = 0;
+            }
+            const result = [];
+            let index = 0;
+            const edgeNodes = this.getEdges();
+            this.sortEdges(edgeNodes);
+            for(let i = 0; i < edgeNums; i++){
+                const p1 = this.getPosition(edgeNodes[i].start);
+                const p2 = this.getPosition(edgeNodes[i].end);
+                const m = this.getEndpoint(endpints,p1);
+                const n = this.getEndpoint(endpints,p2);
+                if(m != n){
+                    endpints[m] = n;
+                    result[index++] = edgeNodes[i];
+                }
+            }
+            for(let i = 0; i < result.length; i++){
+                console.log(result[i]);
+            }
+        }
+    };
+
+    ////////////////////////////////////////////
+    const INF = 999999;
+    const vertexs = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const matrix = [
+	      /*A*//*B*//*C*//*D*//*E*//*F*//*G*/
+	/*A*/[0, 12, INF, INF, INF, 16, 14],
+	/*B*/[12, 0, 10, INF, INF, 7, INF],
+	/*C*/[INF, 10, 0, 3, 5, 6, INF],
+	/*D*/[INF, INF, 3, 0, 4, INF, INF],
+	/*E*/[INF, INF, 5, 4, 0, 2, 8],
+	/*F*/[16, 7, 6, INF, 2, 0, 9],
+	/*G*/[14, INF, INF, INF, 8, 9, 0]
+    ];
+    const graph = new Graph(vertexs.length);
+    const kruskalCase = new KruskalCase(graph);
+    kruskalCase.makeGraph(vertexs, matrix);
+    // const edgeNodes = kruskalCase.getEdges();
+    // kruskalCase.sortEdges(edgeNodes);
+    kruskalCase.kruskal();
+</script>
