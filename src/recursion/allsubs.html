@@ -1,0 +1,19 @@
+<script>
+        function calcSubs(str, index, res) {
+            if (index == str.length) {
+                console.log(res);
+                return;
+            } else {
+                calcSubs(str, index + 1, res);
+                calcSubs(str, index + 1, res + str[index]);
+            }
+        }
+        calcSubs('abc', 0, '');
+</script>
+<!-- 
+    https://blog.csdn.net/xiaomu_347/article/details/81624818
+    https://blog.csdn.net/qq_34115899/article/details/79732050  
+    abc
+    连续子串（n+1）/2 +1：a ab abc b bc c 
+    所有子序列2^n: a ab ac
+ -->
